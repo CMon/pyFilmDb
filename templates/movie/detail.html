@@ -1,0 +1,124 @@
+<a href="/movies/">Movielist</a>
+
+<h2 class="movieTitle">{{ movie.title }}</h2>
+<h3 class="dateStudioProducer">
+    <a href="/studio/{{ movie.studio }}">{{ movie.studio }}</a>
+    {% if movie.productionDate %}
+         - {{ movie.productionDate }}
+    {% endif %}
+</h3>
+<h3>
+    {% if movie.directors %}
+        {% for director in movie.directors %}
+            <a href="/director/{{ director }}">{{ director }}</a>,
+        {% endfor %}
+    {% endif %}
+</h3>
+
+<table>
+    <tr><td>Front</td><td>Back</td></tr>
+    <tr>
+        <td align="center" class="coverPicture">
+            {% if movie.frontCover %}
+                <img src="{{ movie.frontCover }}" alt="Front">
+            {% else %}
+                <img src="/static/img/x.png" width="200" height="221" alt="No Front Cover">
+            {% endif %}
+        </td>
+        <td>
+            {% if movie.backCover %}
+                <img src="{{ movie.backCover }}" alt="Back">
+            {% else %}
+                <img src="/static/img/x.png" width="200" height="221" alt="Back">
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr><td>Duration:</td><td>{{ movie.duration }} minutes</td></tr>
+    <tr>
+        <td>Actors:</td>
+        <td>
+            {% if movie.actors %}
+                {% for actor in movie.actors %}
+                    <a href="/actor/{{ actor }}/">{{ actor }}</a>,
+                {% endfor %}
+            {% else %}
+            -
+            {% endif %}
+       </td>
+    </tr>
+    {% if movie.description %}
+    <tr>
+        <td>Description:</td>
+        <td>{{ movie.description }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td>Genres:</td>
+        <td>
+            {% if movie.genres %}
+                {% for genre in movie.genres %}
+                    <a href="/genre/{{ genre.shortDescription }}/">{{ genre.shortDescription }}</a>,
+                {% endfor %}
+            {% else %}
+            -
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+{% if movie.movieRelPath %}
+<a href="moviePlayBackThingy">{{ movie.movieRelPath }}</a>
+{% endif %}
+
+{% if scenes %}
+<div class="scenes">
+    <script type="text/javascript">
+        function changeImageTo(imagePath) {
+            window.document.images[Bildnr].src = Bildobjekt.src;
+        }
+    </script>
+    <table class="scenesTable">
+        {% for scene in scenes %}
+            <tr class="header"><th>{{ scene.title }}</th><th>Actors</th><th>Genres</th><th>Play</th></tr>
+            <tr class="scene">
+                <td class="animatedGif">
+                    <a href="{{ scene.sceneRelPath }}">
+                        <!-- TODO animated -->
+                        {% if movie.backCover %}
+                            <img src="{{ scene.stillImage }}" alt="{{ scene.title }}">
+                        {% else %}
+                            <img src="/static/img/x.png" width="20" height="22" alt="{{ scene.title }}">
+                        {% endif %}
+                    </a>
+                </td>
+                <td class="actors">
+                    {% if scene.actors %}
+                        {% for actor in scene.actors %}
+                            <a href="/actor/{{ actor }}/">{{ actor }}</a>,
+                        {% endfor %}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td class="genres">
+                    {% if scene.genres %}
+                        {% for genre in scene.genres %}
+                            <a href="/genre/{{ genre.shortDescription }}/">{{ genre.shortDescription }}</a>,
+                        {% endfor %}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td class="play">
+                    {% if scene.sceneRelPath %}
+                        <a href="/genre/{{ scene.sceneRelPath }}/">{{ scene.sceneRelPath }}</a>,
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
