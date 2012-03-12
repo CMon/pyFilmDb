@@ -5,7 +5,8 @@ from xml.dom.minidom import Document
 from lxml import etree
 import hashlib
 
-basePath = "/Users/twist/Downloads/"
+homedir = os.path.expanduser("~")
+basePath = homedir + "/Downloads/"
 if (len(sys.argv) == 2):
     basePath = sys.argv[1]
 elif len(sys.argv) > 2:
@@ -23,8 +24,13 @@ AllowedExtensions=[
 ]
 
 def parseFixturesFile():
-    fixturesFile = open("fixtures.xml", "r+")
     fileHashMap = {}
+    try:
+        fixturesFile = open("fixtures.xml", "r+")
+    except Exception,  e:
+        print "Error: ", e
+        return fileHashMap
+
     try:
         tree = etree.parse(fixturesFile)
     except:
@@ -54,10 +60,15 @@ def writeFixturesFile(fileHashMap):
 
     for filename in fileHashMap.keys():
         entry = etree.SubElement(root, "entry")
+
         relpath = etree.SubElement(entry, "relpath")
         relpath.text = filename
+
         hash = etree.SubElement(entry, "hash")
         hash.text = fileHashMap[filename]
+
+        duration = etree.SubElement(entry,  "duration")
+        duration.text = str(666) # TODO: Fixme
 
     fixturesFile = open("fixtures.xml", "w+")
     fixturesFile.write(etree.tostring(root, pretty_print=True))
