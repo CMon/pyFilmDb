@@ -4,10 +4,15 @@ from genres.models import Genre
 
 class Movie(models.Model):
     title = models.CharField(max_length=500, unique=True)
+    slug = models.SlugField(max_length=200)
     description = models.TextField(blank=True, null=True)
     productionDate = models.DateField(blank=True, null=True)
     frontCover = models.ImageField(upload_to='images/movies/', blank=True, null=True)
     backCover = models.ImageField(upload_to='images/movies/', blank=True, null=True)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('detail', (self.slug,))
 
     def __unicode__(self):
         return self.title

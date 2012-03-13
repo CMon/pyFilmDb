@@ -13,15 +13,15 @@ from django.db.models import Q
 def index(request):
     allMovies = Movie.objects.all().order_by('title')
 
-    tamplate = loader.get_template('templates/movie/movie.html')
+    tamplate = loader.get_template('movie/movie.html')
     context = Context({
         'movies': allMovies,
     })
 
     return HttpResponse(tamplate.render(context))
 
-def detail(request, title):
-    movie = get_object_or_404(Movie, title=title)
+def detail(request, slug):
+    movie = get_object_or_404(Movie, slug=slug)
     directors = Director.objects.filter(movies=movie)
 
     scenes = Scene.objects.filter(movie=movie)
@@ -40,4 +40,4 @@ def detail(request, title):
         'scenes' : scenes
     })
 
-    return render_to_response('templates/movie/detail.html', context)
+    return render_to_response('movie/detail.html', context)

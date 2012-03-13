@@ -10,5 +10,5 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('movies.views',
     url(r'^movies/$',               'index',  name='index'),
-    url(r'^movies/(?P<title>.*)/$', 'detail', name='detail'),
+    url(r'^movies/(?P<slug>.*)/$', 'detail', name='detail'),
 )
