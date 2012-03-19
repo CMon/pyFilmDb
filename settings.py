@@ -148,7 +148,7 @@ LOGGING = {
     }
 }
 
-MOVIE_BASE_DIR="~/"
+MOVIE_BASE_DIR="/static/media"
 # override settings from local.py
 if os.path.exists('local.py'):
     execfile('local.py')

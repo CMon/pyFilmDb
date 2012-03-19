@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+
 <a href="/movies/">Movielist</a>
 
 <h2 class="movieTitle">{{ movie.title }}</h2>
@@ -114,7 +120,17 @@
                 </td>
                 <td class="play">
                     {% if scene.sceneRelPath %}
-                        <a href="/genre/{{ scene.sceneRelPath }}/">{{ scene.sceneRelPath }}</a>,
+                        <div id="videoPlayer">
+                            <p id="container1">Please install the Flash Plugin</p>
+
+                            <script type="text/javascript">
+                                var flashvars = { file:'{{ mediaBasePath }}/{{ scene.sceneRelPath }}',autostart:'false' };
+                                var params = { allowfullscreen:'true', allowscriptaccess:'always' };
+                                var attributes = { id:'playerID', name:'playerName' };
+
+                                swfobject.embedSWF('/static/js/vendor/player.swf','container1','240','135','9.0.115','false', flashvars, params, attributes);
+                            </script>
+                        </div>
                     {% endif %}
                 </td>
             </tr>
@@ -122,3 +138,5 @@
     </table>
 </div>
 {% endif %}
+
+{% endblock %}

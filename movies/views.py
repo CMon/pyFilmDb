@@ -1,4 +1,5 @@
 from django.template import Context, loader
+from django.conf import settings
 from movies.models import Movie, Scene
 from directors.models import Director
 from actors.models import Actor, Person
@@ -37,7 +38,8 @@ def detail(request, slug):
 
     context = Context({
         'movie'  : movie,
-        'scenes' : scenes
+        'scenes' : scenes,
+        'mediaBasePath' : settings.MOVIE_BASE_DIR
     })
 
     return render_to_response('movie/detail.html', context)
