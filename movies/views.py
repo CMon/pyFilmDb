@@ -1,3 +1,4 @@
+import os
 from django.template import Context, loader
 from django.conf import settings
 from movies.models import Movie, Scene
@@ -9,8 +10,6 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 
 
-#https://docs.djangoproject.com/en/1.3/intro/tutorial03/
-
 def index(request):
     allMovies = Movie.objects.all().order_by('title')
 
@@ -21,6 +20,15 @@ def index(request):
 
     return HttpResponse(tamplate.render(context))
 
+def isSupportedPlaybackFormat(scene):
+    if len(scene.sceneRelPath) <= 0: return False
+    extension = os.path.splitext(scene.sceneRelPath)[1]
+
+    if extension in settings.PLAYER_SUPPORTED_FORMATS:
+        return True
+
+    return False
+
 def detail(request, slug):
     movie = get_object_or_404(Movie, slug=slug)
     directors = Director.objects.filter(movies=movie)
@@ -29,6 +37,7 @@ def detail(request, slug):
     for scene in scenes:
         scene.genres = Genre.objects.filter(scenes=scene)
         scene.actors = Actor.objects.filter(scenes=scene)
+        scene.supportedFormat = isSupportedPlaybackFormat(scene)
 
     movie.directors = directors
     movie.studio = "STUDIOTODO"

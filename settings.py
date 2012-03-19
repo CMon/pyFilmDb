@@ -149,6 +149,7 @@ LOGGING = {
 }
 
 MOVIE_BASE_DIR="/static/media"
+PLAYER_SUPPORTED_FORMATS= ['.mp4', '.flv']
 # override settings from local.py
 if os.path.exists('local.py'):
     execfile('local.py')
