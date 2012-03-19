@@ -81,7 +81,7 @@ def listFiles(dir, files):
         itemPath = os.path.join(basedir,item)
         if os.path.isfile(itemPath):
             fileName, fileExtension = os.path.splitext(itemPath)
-            if fileExtension in AllowedExtensions:
+            if fileExtension.lower() in AllowedExtensions:
                 files.append(itemPath)
         elif os.path.isdir(itemPath):
             subdirlist.append(itemPath)

@@ -24,7 +24,7 @@ def isSupportedPlaybackFormat(scene):
     if len(scene.sceneRelPath) <= 0: return False
     extension = os.path.splitext(scene.sceneRelPath)[1]
 
-    if extension in settings.PLAYER_SUPPORTED_FORMATS:
+    if extension.lower() in settings.PLAYER_SUPPORTED_FORMATS:
         return True
 
     return False
