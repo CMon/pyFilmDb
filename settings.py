@@ -149,7 +149,12 @@ LOGGING = {
 }
 
 MOVIE_BASE_DIR="/static/media"
-PLAYER_SUPPORTED_FORMATS= ['.mp4', '.flv']
+# supported formats taken from:
+# http://www.longtailvideo.com/support/jw-player/jw-player-for-flash-v5/12539/supported-video-and-audio-formats
+PLAYER_SUPPORTED_FORMATS= ['.mp4', '.m4v', '.f4v', '.mov',
+                           '.webm',
+                           '.flv',
+                           '.ogv']
 # override settings from local.py
 if os.path.exists('local.py'):
     execfile('local.py')
