@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os
 import sys
-from xml.dom.minidom import Document
 from lxml import etree
 import hashlib
 
