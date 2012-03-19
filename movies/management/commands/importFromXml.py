@@ -34,7 +34,7 @@ class Command(BaseCommand):
             # check if hash has already a scene entry
             scenes = Scene.objects.filter(sha256=hash)
             if len(scenes) > 1:
-                print "ERROR: found an invalid antry (duplicate hash: " + hash + ")"
+                print "ERROR: found an invalid entry (duplicate hash: " + hash + ")"
             elif len(scenes) == 1:
                 scene = scenes[0]
                 if scene.sceneRelPath != filename:
@@ -49,7 +49,8 @@ class Command(BaseCommand):
             hash = generateMissingHash()
 
         movie = Movie(
-            title = hash
+            title = hash,
+            slug = hash
         )
         movie.save()
         scene = Scene(
