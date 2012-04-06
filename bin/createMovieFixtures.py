@@ -30,11 +30,12 @@ def getElemntText(element, tagname):
         return ""
     return text[0]
 
-def newFileHashMapElemnt(hash, animatedPreviewPath, duration):
+def newFileHashMapElemnt(hash, duration, animatedPreviewPath, stillPreviewPath):
     return dict([
         ('hash', hash),
+        ('duration', duration),
         ('animatedPreviewPath', animatedPreviewPath),
-        ('duration', duration)
+        ('stillPreviewPath', stillPreviewPath)
     ])
 
 def parseFixturesFile():
@@ -61,8 +62,10 @@ def parseFixturesFile():
         hash                = getElemntText(element, "hash")
         animatedPreviewPath = getElemntText(element, "animatedPreviewPath")
         duration            = getElemntText(element, "duration")
+        stillPreviewPath    = getElemntText(element, "stillPreviewPath")
 
-        fileHashMap[filename] = newFileHashMapElemnt(hash, animatedPreviewPath, duration)
+
+        fileHashMap[filename] = newFileHashMapElemnt(hash, duration, animatedPreviewPath, stillPreviewPath)
 
     fixturesFile.close()
     return fileHashMap
@@ -70,6 +73,10 @@ def parseFixturesFile():
 def writeFixturesFile(fileHashMap):
     print "Updating fixtures file do not disturb"
     root = etree.Element("fixtures")
+
+    pp = PreviewPictures()
+    ppWidth = pp.getWidth()
+    ppHeight = pp.getHeight()
 
     for filename in fileHashMap.keys():
         entry = etree.SubElement(root, "entry")
@@ -80,11 +87,16 @@ def writeFixturesFile(fileHashMap):
         hash = etree.SubElement(entry, "hash")
         hash.text = str(fileHashMap[filename]['hash'])
 
-        animatedPreviewPath = etree.SubElement(entry, "animatedPreviewPath")
-        animatedPreviewPath.text = str(fileHashMap[filename]['animatedPreviewPath'])
-
         duration = etree.SubElement(entry, "duration")
         duration.text = str(fileHashMap[filename]['duration'])
+
+        # TODO: fixme:
+        # This will overwrite the Height and width, better would be the already stored values
+        animatedPreviewPath = etree.SubElement(entry, "animatedPreviewPath", width=str(ppWidth), height=str(ppHeight))
+        animatedPreviewPath.text = str(fileHashMap[filename]['animatedPreviewPath'])
+
+        stillPreviewPath = etree.SubElement(entry, "stillPreviewPath", width=str(ppWidth), height=str(ppHeight))
+        stillPreviewPath.text = str(fileHashMap[filename]['stillPreviewPath'])
 
     fixturesFile = open("fixtures.xml", "w+")
     fixturesFile.write(etree.tostring(root, pretty_print=True))
@@ -163,22 +175,42 @@ def incrementalHashGeneration(basePath, fileHashMap):
 def updateDurations(basePath, fileHashMap):
     pp = PreviewPictures()
 
-    someThingChanged = False
+    somethingChanged = False
     for file in fileHashMap.keys():
         if fileHashMap[file]['duration'] == "":
             fullFilePath = basePath + "/" + file
             print "Setting Duration of " + fullFilePath
             fileHashMap[file]['duration'] = pp.getDuration(fullFilePath)
-            someThingChanged = True
+            somethingChanged = True
 
-    if someThingChanged:
+    if somethingChanged:
         writeFixturesFile(fileHashMap)
     else:
         print "no Durations where updated"
 
 
-def updateAnimatedGifs(basePath, fileHashMap):
-    print "TODO: updateAnimatedGifs"
+def updateAnimatedGifs(basePath, pathForMediaStorage, fileHashMap):
+    pp = PreviewPictures()
+
+    somethingChanged = False
+    for file in fileHashMap.keys():
+        if fileHashMap[file]['animatedPreviewPath'] == "":
+            fullFilePath = basePath + "/" + file
+            fileName = fileHashMap[file]['hash']
+            print "Creating images for: " + fullFilePath
+
+            outputAnimatedFile = pathForMediaStorage + fileName + ".gif"
+            outputStillFile    = pathForMediaStorage + fileName + ".png"
+
+            pp.generateGif(fullFilePath, outputAnimatedFile, outputStillFile)
+            somethingChanged = True
+            fileHashMap[file]['animatedPreviewPath'] = fileName + ".gif"
+            fileHashMap[file]['stillPreviewPath']    = fileName + ".png"
+
+    if somethingChanged:
+        writeFixturesFile(fileHashMap)
+    else:
+        print "no Animated Preview Gifs where updated"
 
 # Main program starts Here
 (options, args) = parser.parse_args()
@@ -196,8 +228,11 @@ if options.updateDurations:
     actionPerformed = True
 
 if options.updateAnimated:
-    updateAnimatedGifs(basePath, fileHashMap)
-    actionPerformed = True
+    if not os.path.isdir(options.updateAnimated):
+        print "The argument for updateAnimatedImages has to be a directory"
+    else:
+        updateAnimatedGifs(basePath, options.updateAnimated, fileHashMap)
+        actionPerformed = True
 
 if not actionPerformed:
     parser.print_help()
