@@ -3,14 +3,16 @@ import os
 import sys
 from lxml import etree
 import hashlib
+from optparse import OptionParser
+from PreviewPictures import PreviewPictures
+
 
 homedir = os.path.expanduser("~")
-basePath = homedir + "/Downloads/"
-if (len(sys.argv) == 2):
-    basePath = sys.argv[1]
-elif len(sys.argv) > 2:
-    print "Wrong usage"
-    sys.exit()
+parser = OptionParser()
+parser.add_option("-b", "--basePath",             dest="basePath",        default=homedir+"/Downloads/", help="set the base directory from where all movies are searched")
+parser.add_option("-c", "--createHash",           dest="createHash",      action="store_true",           help="create hash values for found movies")
+parser.add_option("-d", "--updateDurations",      dest="updateDurations", action="store_true",           help="update duration fields for existing hashed files")
+parser.add_option("-a", "--updateAnimatedImages", dest="updateAnimated",  default=None,                  help="create animated Preview gifs for those who do not have them argument is the destination to place the gif")
 
 AllowedExtensions=[
     ".wmv",
@@ -21,6 +23,19 @@ AllowedExtensions=[
     ".mov",
     ".rmvb"
 ]
+
+def getElemntText(element, tagname):
+    text = element.xpath(tagname + "/text()")
+    if len(text) == 0:
+        return ""
+    return text[0]
+
+def newFileHashMapElemnt(hash, animatedPreviewPath, duration):
+    return dict([
+        ('hash', hash),
+        ('animatedPreviewPath', animatedPreviewPath),
+        ('duration', duration)
+    ])
 
 def parseFixturesFile():
     fileHashMap = {}
@@ -43,18 +58,17 @@ def parseFixturesFile():
         else:
             filename = filename[0]
 
-        hash = element.xpath("hash/text()")
-        if len(hash) == 0:
-            hash = ""
-        else:
-            hash = hash[0]
+        hash                = getElemntText(element, "hash")
+        animatedPreviewPath = getElemntText(element, "animatedPreviewPath")
+        duration            = getElemntText(element, "duration")
 
-        fileHashMap[filename] = hash
+        fileHashMap[filename] = newFileHashMapElemnt(hash, animatedPreviewPath, duration)
 
     fixturesFile.close()
     return fileHashMap
 
 def writeFixturesFile(fileHashMap):
+    print "Updating fixtures file do not disturb"
     root = etree.Element("fixtures")
 
     for filename in fileHashMap.keys():
@@ -64,10 +78,13 @@ def writeFixturesFile(fileHashMap):
         relpath.text = filename
 
         hash = etree.SubElement(entry, "hash")
-        hash.text = fileHashMap[filename]
+        hash.text = str(fileHashMap[filename]['hash'])
 
-        duration = etree.SubElement(entry,  "duration")
-        duration.text = str(666) # TODO: Fixme
+        animatedPreviewPath = etree.SubElement(entry, "animatedPreviewPath")
+        animatedPreviewPath.text = str(fileHashMap[filename]['animatedPreviewPath'])
+
+        duration = etree.SubElement(entry, "duration")
+        duration.text = str(fileHashMap[filename]['duration'])
 
     fixturesFile = open("fixtures.xml", "w+")
     fixturesFile.write(etree.tostring(root, pretty_print=True))
@@ -103,33 +120,85 @@ def calculateHash(fileName):
     return m.hexdigest()
 
 def checkForDuplicates(fileHashMap):
-    sha256s = fileHashMap.values()
     verifyList = []
     for file in fileHashMap.keys():
-        h = fileHashMap[file]
+        h = fileHashMap[file]['hash']
         if h in verifyList:
             print "Duplicate Found: ", file
             continue
         verifyList.append(h)
 
-fileHashMap = parseFixturesFile()
+    print "TODO: remove dupplicates"
 
-files = []
-listFiles(basePath, files)
-for file in files:
-    sha256 = ""
-    fileBaseName = file[len(basePath):]
-    if fileBaseName in fileHashMap.keys():
-        if fileHashMap[fileBaseName] == "":
-            sha256 = calculateHash(file)
-        else:
-            sha256 = fileHashMap[fileBaseName]
+## main methods
+
+def incrementalHashGeneration(basePath, fileHashMap):
+    files = []
+    listFiles(basePath, files)
+
+    print "Incremental Hash creation started (this can be interrupted with CTRL+C, in case of interruption the partly created hashes will be stored)"
+
+    try:
+        for file in files:
+            sha256 = ""
+            fileBaseName = file[len(basePath):]
+            if fileBaseName in fileHashMap.keys():
+                if fileHashMap[fileBaseName]['hash'] == "":
+                    sha256 = calculateHash(file)
+                else:
+                    sha256 = fileHashMap[fileBaseName]['hash']
+                fileHashMap[fileBaseName]['hash'] = sha256
+            else:
+                sha256 = calculateHash(file)
+                fileHashMap[fileBaseName] = newFileHashMapElemnt(sha256, "", "")
+
+    except KeyboardInterrupt, e:
+        print "Interrupted hash creation storing files now"
+
+    print "Finished creation of hashes, do not press CTRL+C now, because we are storing the file now"
+
+    checkForDuplicates(fileHashMap)
+    writeFixturesFile(fileHashMap)
+
+def updateDurations(basePath, fileHashMap):
+    pp = PreviewPictures()
+
+    someThingChanged = False
+    for file in fileHashMap.keys():
+        if fileHashMap[file]['duration'] == "":
+            fullFilePath = basePath + "/" + file
+            print "Setting Duration of " + fullFilePath
+            fileHashMap[file]['duration'] = pp.getDuration(fullFilePath)
+            someThingChanged = True
+
+    if someThingChanged:
+        writeFixturesFile(fileHashMap)
     else:
-        sha256 = calculateHash(file)
+        print "no Durations where updated"
 
-    fileHashMap[fileBaseName] = sha256
 
-checkForDuplicates(fileHashMap)
-writeFixturesFile(fileHashMap)
+def updateAnimatedGifs(basePath, fileHashMap):
+    print "TODO: updateAnimatedGifs"
 
-print "Created fixtures file."
+# Main program starts Here
+(options, args) = parser.parse_args()
+
+fileHashMap = parseFixturesFile()
+basePath = options.basePath
+actionPerformed = False
+
+if options.createHash:
+    incrementalHashGeneration(basePath, fileHashMap)
+    actionPerformed = True
+
+if options.updateDurations:
+    updateDurations(basePath, fileHashMap)
+    actionPerformed = True
+
+if options.updateAnimated:
+    updateAnimatedGifs(basePath, fileHashMap)
+    actionPerformed = True
+
+if not actionPerformed:
+    parser.print_help()
+
