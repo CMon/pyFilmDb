@@ -122,7 +122,8 @@ INSTALLED_APPS = (
     'actors',
     'directors',
     'genres',
-    'movies'
+    'movies',
+    'user'
 )
 
 # A sample logging configuration. The only tangible logging

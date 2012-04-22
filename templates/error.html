@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if invalidAccount %}
+        Invalid Login
+    {% elif disabledAccount %}
+        Disabled Account
+    {% else %}
+        Unknown Error
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if invalidAccount %}
+        <p>
+            This Account does not exist. Back to <a href="/">Login</a>.
+        </p>
+    {% elif disabledAccount %}
+        <p>
+            Your Account has been disabled. Back to <a href="/">Login</a>.
+        </p>
+    {% else %}
+        <p>
+            Unknown Error occured. Back to <a href="/">Login</a>.
+        </p>
+    {% endif %}
+{% endblock %}

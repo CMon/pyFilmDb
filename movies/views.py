@@ -8,8 +8,9 @@ from genres.models import Genre
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
+from django.contrib.auth.decorators import permission_required
 
-
+@permission_required('movies.watch')
 def index(request):
     allMovies = Movie.objects.all().order_by('title')
 
@@ -29,12 +30,22 @@ def isSupportedPlaybackFormat(scene):
 
     return False
 
+@permission_required('movies.watch')
 def detail(request, slug):
+    user = request.user
     movie = get_object_or_404(Movie, slug=slug)
+    if movie.restrictedView and not user.has_perm('movies.allowedRestricted'):
+        return render_to_response('movie/restricted.html')
+
     directors = Director.objects.filter(movies=movie)
 
     scenes = Scene.objects.filter(movie=movie)
     for scene in scenes:
+        if scene.restrictedView and not user.has_perm('movies.allowedRestricted'):
+            scene.isRestricted = True
+        else:
+            scene.isRestricted = False
+
         scene.genres = Genre.objects.filter(scenes=scene)
         scene.actors = Actor.objects.filter(scenes=scene)
         scene.supportedFormat = isSupportedPlaybackFormat(scene)
