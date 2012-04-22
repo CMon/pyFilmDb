@@ -21,7 +21,7 @@ def index(request):
 
     return HttpResponse(tamplate.render(context))
 
-def isSupportedPlaybackFormat(scene):
+def __isSupportedPlaybackFormat(scene):
     if len(scene.sceneRelPath) <= 0: return False
     extension = os.path.splitext(scene.sceneRelPath)[1]
 
@@ -48,13 +48,13 @@ def detail(request, slug):
 
         scene.genres = Genre.objects.filter(scenes=scene)
         scene.actors = Actor.objects.filter(scenes=scene)
-        scene.supportedFormat = isSupportedPlaybackFormat(scene)
+        scene.supportedFormat = __isSupportedPlaybackFormat(scene)
 
     movie.directors = directors
     movie.studio = "STUDIOTODO"
     movie.actors = Actor.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
     movie.genres = Genre.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
-    movie.duration = 666 # TODO: all durations of every scene
+    movie.duration = -666 # TODO: all durations of every scene
 
     context = Context({
         'movie'  : movie,
