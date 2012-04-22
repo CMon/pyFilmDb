@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.decorators import permission_required
 
-@permission_required('movies.watch')
+@permission_required('movies.watch', login_url="/")
 def index(request):
     allMovies = Movie.objects.all().order_by('title')
 
@@ -30,7 +30,7 @@ def __isSupportedPlaybackFormat(scene):
 
     return False
 
-@permission_required('movies.watch')
+@permission_required('movies.watch', login_url="/")
 def detail(request, slug):
     user = request.user
     movie = get_object_or_404(Movie, slug=slug)

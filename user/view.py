@@ -1,15 +1,15 @@
 from django.http import HttpResponse
 from django.template import Context, loader
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 import logging
 
-@login_required
+@login_required(login_url="/")
 def index(request):
     user = None
     if request.user.is_authenticated():
-        user = request.user
+        user = get_user(request)
 
     template = loader.get_template('user/detail.html')
     context = Context({
@@ -38,7 +38,7 @@ def dbLogin(request):
         logger.error('Invalid User(%s) tried to login' % username)
         return HttpResponse(template.render(Context({'invalidAccount' : True})))
 
-@login_required
+@login_required(login_url="/")
 def dbLogout(request):
     logout()
     print request.user
