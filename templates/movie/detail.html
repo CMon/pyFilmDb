@@ -89,17 +89,12 @@
 
 {% if scenes %}
 <div class="scenes">
-    <script type="text/javascript">
-        function changeImageTo(imagePath) {
-            window.document.images[Bildnr].src = Bildobjekt.src;
-        }
-    </script>
     <table class="scenesTable">
         {% for scene in scenes %}
             {% if scene.isRestricted %}
                 <tr><td colspan="4" align="left">Restriced Scene: {{ scene.title }}</td></tr>
             {% else %}
-                <tr class="header"><th>{{ scene.title }}</th><th>Actors</th><th>Genres</th><th>Play</th></tr>
+                <tr class="header"><th align="left">{{ scene.title }}</th><th>Actors</th><th>Genres</th><th>Play</th></tr>
                 <tr class="scene">
                     <td class="animatedGif">
                         <a href="{{ scene.sceneRelPath }}">

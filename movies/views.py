@@ -40,6 +40,19 @@ def __secondsToDurationString(seconds):
     minutes = minutes % 60
     return '%d:%02d:%02d' % (hours, minutes, seconds)
 
+def __enhanceSceneObject(scenes, user):
+    durationOfAllScenes = 0
+    for scene in scenes:
+        if scene.restrictedView and not user.has_perm('movies.allowedRestricted'):
+            scene.isRestricted = True
+        else:
+            scene.isRestricted = False
+        scene.genres = Genre.objects.filter(scenes=scene)
+        scene.actors = Actor.objects.filter(scenes=scene)
+        scene.supportedFormat = __isSupportedPlaybackFormat(scene)
+        durationOfAllScenes += scene.duration
+    return scenes, durationOfAllScenes
+
 @permission_required('movies.watch', login_url="/")
 def detail(request, slug):
     user = request.user
@@ -49,18 +62,8 @@ def detail(request, slug):
 
     directors = Director.objects.filter(movies=movie)
 
-    durationInSeconds = 0
     scenes = Scene.objects.filter(movie=movie)
-    for scene in scenes:
-        if scene.restrictedView and not user.has_perm('movies.allowedRestricted'):
-            scene.isRestricted = True
-        else:
-            scene.isRestricted = False
-
-        scene.genres = Genre.objects.filter(scenes=scene)
-        scene.actors = Actor.objects.filter(scenes=scene)
-        scene.supportedFormat = __isSupportedPlaybackFormat(scene)
-        durationInSeconds += scene.duration
+    scenes, durationInSeconds = __enhanceSceneObject(scenes, user)
 
     movie.directors = directors
     movie.studio = "STUDIOTODO"
