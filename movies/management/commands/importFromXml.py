@@ -45,8 +45,9 @@ class Command(BaseCommand):
 
     def generateNewEntry(self, hash, filename, element):
         print "Adding: " + hash + " File: " + filename
-        if (hash == ""):
-            hash = generateMissingHash()
+        if hash == "":
+            print " file skipped, because no hash was found"
+            return
 
         movie = Movie(
             title = hash,
