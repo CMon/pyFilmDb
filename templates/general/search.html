@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Simple search{% endblock %}
+
+{% block content %}
+    <form action="/simpleSearch/" method="post">
+        {% csrf_token %}
+
+        Simple search:
+        <table class="search">
+            <tr><td><input name="searchTerm" type="text" maxlength="100"></td><td><input type="submit" value="Search"></td></tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+        document.getElementById('searchTerm').focus()
+    </script>
+{% endblock %}
