@@ -14,12 +14,12 @@ from django.contrib.auth.decorators import permission_required
 def index(request):
     allMovies = Movie.objects.all().order_by('title')
 
-    tamplate = loader.get_template('movie/movie.html')
+    template = loader.get_template('movie/movie.html')
     context = Context({
         'movies': allMovies,
     })
 
-    return HttpResponse(tamplate.render(context))
+    return HttpResponse(template.render(context))
 
 def __isSupportedPlaybackFormat(scene):
     if len(scene.sceneRelPath) <= 0: return False
