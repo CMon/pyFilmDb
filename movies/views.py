@@ -12,7 +12,10 @@ from django.contrib.auth.decorators import permission_required
 
 @permission_required('movies.watch', login_url="/")
 def index(request):
-    allMovies = Movie.objects.all().order_by('title')
+    if request.user.has_perm('movies.allowedRestricted'):
+        allMovies = Movie.objects.all().order_by('title')
+    else:
+        allMovies = Movie.objects.filter(restrictedView=False)
 
     template = loader.get_template('movie/movie.html')
     context = Context({
