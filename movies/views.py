@@ -78,3 +78,28 @@ def detail(request, slug):
     })
 
     return render_to_response('movie/detail.html', context)
+
+@permission_required('movies.watch', login_url="/")
+def sceneList(request):
+    user = request.user
+
+    if user.has_perm('movies.allowedRestricted'):
+        allScenes = Scene.objects.all().order_by('title')
+    else:
+        allScenes = Scene.objects.filter(restrictedView=False)
+
+    allScenes, durationInSeconds = __enhanceSceneObject(allScenes, user)
+
+    context = Context({
+        'scenes': allScenes,
+    })
+
+    return render_to_response('movie/sceneList.html', context)
+
+@permission_required('movies.watch', login_url="/")
+def sceneDetail(request, sha256):
+    print sha256
+    # get slug of movie of given scenes sha256
+    slug = "foo"
+
+    return detail(request, slug)

@@ -11,8 +11,10 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('movies.views',
-    url(r'^movies/$',              'index',  name='index'),
-    url(r'^movies/(?P<slug>.*)/$', 'detail', name='detail'),
+    url(r'^movies/$',                'index',  name='index'),
+    url(r'^movies/(?P<slug>.*)/$',   'detail', name='detail'),
+    url(r'^scenes/$',                'sceneList',  name='sceneList'),
+    url(r'^scenes/(?P<sha256>.*)/$', 'sceneDetail', name='sceneDetail'),
 )
 
 urlpatterns += patterns('user.view',
