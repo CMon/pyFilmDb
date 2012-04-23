@@ -30,6 +30,13 @@ def __isSupportedPlaybackFormat(scene):
 
     return False
 
+def __secondsToDurationString(seconds):
+    minutes = seconds / 60
+    seconds = seconds % 60
+    hours   = minutes / 60
+    minutes = minutes % 60
+    return '%d:%02d:%02d' % (hours, minutes, seconds)
+
 @permission_required('movies.watch', login_url="/")
 def detail(request, slug):
     user = request.user
@@ -39,6 +46,7 @@ def detail(request, slug):
 
     directors = Director.objects.filter(movies=movie)
 
+    durationInSeconds = 0
     scenes = Scene.objects.filter(movie=movie)
     for scene in scenes:
         if scene.restrictedView and not user.has_perm('movies.allowedRestricted'):
@@ -49,12 +57,13 @@ def detail(request, slug):
         scene.genres = Genre.objects.filter(scenes=scene)
         scene.actors = Actor.objects.filter(scenes=scene)
         scene.supportedFormat = __isSupportedPlaybackFormat(scene)
+        durationInSeconds += scene.duration
 
     movie.directors = directors
     movie.studio = "STUDIOTODO"
     movie.actors = Actor.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
     movie.genres = Genre.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
-    movie.duration = -666 # TODO: all durations of every scene
+    movie.duration = __secondsToDurationString(durationInSeconds)
 
     context = Context({
         'movie'  : movie,
