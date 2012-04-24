@@ -26,14 +26,14 @@
     <tr>
         <td align="center" class="coverPicture">
             {% if movie.frontCover %}
-                <img src="{{ movie.frontCover }}" alt="Front">
+                <img src="{{ movie.frontCover.url }}" width="200" alt="Front">
             {% else %}
                 <img src="/static/img/x.png" width="200" height="221" alt="No Front Cover">
             {% endif %}
         </td>
         <td>
             {% if movie.backCover %}
-                <img src="{{ movie.backCover }}" alt="Back">
+                <img src="{{ movie.backCover.url }}" width="200" alt="Back">
             {% else %}
                 <img src="/static/img/x.png" width="200" height="221" alt="Back">
             {% endif %}

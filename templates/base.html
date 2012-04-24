@@ -4,11 +4,58 @@
     <script type="text/javascript"
         src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js">
     </script>
+    <link href="http://fonts.googleapis.com/css?family=Nunito:400,300,700" rel="stylesheet" type="text/css">
     <title>{% block title %} python Film Database {% endblock %}</title>
+    <style>
+        body { 
+        font-family: 'Nunito', sans-serif; 
+        font-size:  14px; 
+        background-color: #EFEFEF;
+        }
+        #container {
+            width:  780px;
+            margin: 0 auto;
+            background-color: #FFF;
+            padding: 20px;
+        }
+        #nav ul {
+            list-style-type: none;
+            list-style-position: inside;
+            padding: 0;
+            margin: 0;
+        }
+        #nav li {
+            display: inline-block;
+        }
+        #nav a {
+            display: block;
+            padding: 10px;
+            background-color: #EFEFEF;
+        }
+        #nav a:hover, #nav a.active {
+            background-color: yellow;
+        }
+        #content {
+        
+        }
+    </style>
 </head>
 
 <body>
-    {% block content %}
+    <div id="container">
+    <div id="nav">
+    {% block nav %}
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="{% url movie_index %}">Movies</a></li>
+            <li><a href="{% url sceneList %}">Scenes</a></li>
+            <li><a href="{% url user_index %}">Users</a></li>
+        </ul>
     {% endblock %}
+    </div>
+    <div id="content">
+    {% block content %}{% endblock %}
+    </div>
+    </div>
 </body>
 </html>
