@@ -33,7 +33,9 @@ urlpatterns += patterns('general.views',
 )
 
 urlpatterns += patterns('actors.views',
-    url(r'actors/$', 'actorList', name='actorList'),
+    url(r'^actors/$',                       direct_to_template, {'template' : 'actor/actors.html'}),
+    url(r'^actors/actors_(?P<letter>.*)/$', 'actors'),
+    url(r'^actors/(?P<slug>.*)/$',          'detail', name='actor_detail'),
 )
 
 if settings.DEBUG:

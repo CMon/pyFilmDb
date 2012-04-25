@@ -18,13 +18,13 @@
             background-color: #FFF;
             padding: 20px;
         }
-        #nav ul {
+        #nav ul, #subnav ul {
             list-style-type: none;
             list-style-position: inside;
             padding: 0;
             margin: 0;
         }
-        #nav li {
+        #nav li, #subnav li {
             display: inline-block;
         }
         #nav a {
@@ -39,6 +39,8 @@
         
         }
     </style>
+    {% block style %}
+    {% endblock %}
 </head>
 
 <body>
@@ -49,10 +51,13 @@
             <li><a href="/">Home</a></li>
             <li><a href="{% url movie_index %}">Movies</a></li>
             <li><a href="{% url sceneList %}">Scenes</a></li>
-            <li><a href="{% url actorList %}">Actors</a></li>
+            <li><a href="/actors/">Actors</a></li>
             <li><a href="{% url user_index %}">My Account</a></li>
         </ul>
     {% endblock %}
+    </div>
+    <div id="subnav">
+        {% block subnav %}{% endblock %}
     </div>
     <div id="content">
     {% block content %}{% endblock %}

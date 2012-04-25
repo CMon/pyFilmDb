@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block style %}
+    <style>
+        .test {
+            padding:0;
+            margin:0;
+            list-style-type:none;
+        }
+        .test li {
+            padding-left: 20px;
+            float:left;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}List of Actors{% endblock %}
+
+{% block subnav %}
+    <ul>
+        <li><a href="/actors/actors_All">All</a></li>
+        {% for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+            <li><a href="/actors/actors_{{ letter }}">{{ letter }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+    {% for actor in actors %}
+        <ul class="test">
+            <li>
+                <a href="/actors/{{ actor.person.id }}">
+                <table>
+                    <tr><td>
+                    {% if actor.person.picture %}
+                        <img src="{{ actor.person.picture.url }}" width="100" height="150" alt="{{ actor.person.firstName }} {{ actor.person.lastName }}">
+                    {% else %}
+                        <img src="/static/img/x.png" width="100" height="150" alt="{{ actor.person.firstName }} {{ actor.person.lastName }}">
+                    {% endif %}
+                    </td></tr>
+                    <tr><td>
+                    {{ actor.person.firstName }} {{ actor.person.lastName }}
+                    </td></tr>
+                </table>
+                </a>
+            </li>
+        </ul>
+    {% endfor %}
+{% endblock %}

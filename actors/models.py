@@ -11,6 +11,7 @@ class Person(models.Model):
         return self.firstName + " " + self.lastName
 
 class Actor(models.Model):
+    id = models.AutoField(primary_key=True)
     person = models.ForeignKey(Person)
     scenes = models.ManyToManyField('movies.Scene', blank=True, null=True)
     movies = models.ManyToManyField('movies.Movie', blank=True, null=True)
@@ -18,6 +19,11 @@ class Actor(models.Model):
     measurements = models.CharField(max_length=20, blank=True, null=True)
     ethnicity = models.CharField(max_length=20, blank=True, null=True)
     link = models.URLField(blank=True, null=True)
+    slug = models.SlugField(max_length=200)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('detail', (self.slug,))
 
     def __unicode__(self):
         return self.person.firstName + " " + self.person.lastName
