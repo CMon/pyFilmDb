@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.name }}{% endblock %}
+
+{% block content %}
+    <h3 class="headline">Account details</h3>
+    {% if user %}
+        <table class="detailTable">
+            <tr><td>Login</td><td>{{ user.username }}</td></tr>
+            <tr><td>Is active</td><td>{{ user.is_active }}</td></tr>
+            {% if permissions %}
+                <tr><td valign="top">Permissions</td>
+                    <td><ul>
+                        {% for permission in permissions %}
+                            <li>{{ permission }}</li>
+                        {% endfor %}
+                    </ul></td>
+                </tr>
+            {% endif %}
+            {% if groups %}
+                <tr><td valign="top">Groups</td>
+                    <td><ul>
+                        {% for group in groups %}
+                            <li>{{ group }}</li>
+                        {% endfor %}
+                    </ul></td>
+                </tr>
+            {% endif %}
+        </table>
+    {% else %}
+        You have to be logged in to view the details
+    {% endif %}
+{% endblock %}

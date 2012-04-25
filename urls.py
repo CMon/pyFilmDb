@@ -32,6 +32,10 @@ urlpatterns += patterns('general.views',
     url(r'^extendedSearch/$', 'extendedSearch',   name='extendedSearch'),
 )
 
+urlpatterns += patterns('actors.views',
+    url(r'actors/$', 'actorList', name='actorList'),
+)
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, 'django.views.static.serve', document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, 'django.contrib.staticfiles.views.serve', document_root=settings.STATIC_ROOT)

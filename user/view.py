@@ -13,7 +13,9 @@ def index(request):
 
     template = loader.get_template('user/detail.html')
     context = Context({
-        'user': user,
+        'user':        user,
+        'permissions': user.get_all_permissions(),
+        'groups':      user.get_group_permissions()
     })
 
     return HttpResponse(template.render(context))
