@@ -2,7 +2,7 @@ Django==1.4
 PIL==1.1.7
 South==0.7.4
 Werkzeug==0.8.3
-distribute==0.6.19
+distribute==0.6.26
 django-extensions==0.8
-lxml==2.3.3
+lxml==2.3.4
 wsgiref==0.1.2
