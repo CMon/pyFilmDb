@@ -16,9 +16,8 @@
                     <tr class="scene">
                         <td class="animatedGif">
                             <a href="{{ scene.sceneRelPath }}">
-                                <!-- TODO animated -->
                                 {% if movie.backCover %}
-                                    <img src="{{ scene.stillImage }}" alt="{{ scene.title }}">
+                                    <img src="{{ scene.stillImage }}" onmouseover="{{ scene.animatedImage }}" alt="{{ scene.title }}">
                                 {% else %}
                                     <img src="/static/img/x.png" width="20" height="22" alt="{{ scene.title }}">
                                 {% endif %}
