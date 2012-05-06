@@ -56,20 +56,30 @@
             <li><a href="{% url sceneList %}">Scenes</a></li>
             <li><a href="{% url actors %}">Actors</a></li>
             <li><a href="{% url user_index %}">My Account</a></li>
-            <li>
-                <div id="loginOut">
-                    {% if not user.is_authenticated %}
+            {% if not user.is_authenticated %}
+                <li>
                     <form action="/dbLogin" method="post">
                         {% csrf_token %}
                         <input id="idUsername" name="username" type="text" maxlength="20">
                         <input id="idPassword" name="password" type="password" maxlength="20">
                         <input type="submit" value="Login">
                     </form>
-                    {% else %}
-                        <a href="{% url dbLogout %}">Logout</a>
-                    {% endif %}
-                </div>
-            </li>
+                </li>
+            {% else %}
+                <li>
+                    <form action="/simpleSearch/" method="post">
+                        {% csrf_token %}
+                        <input id="idSearchTerm" name="searchTerm" type="text" maxlength="100">
+                        <input type="submit" value="Submit">
+                    </form>
+                </li>
+                <li>
+                    <a href="/esearch/">Extended Search</a>
+                </li>
+                <li>
+                    <a href="{% url dbLogout %}">Logout</a>
+                </li>
+            {% endif %}
         </ul>
     {% endblock %}
     </div>

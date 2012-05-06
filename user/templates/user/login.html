@@ -3,5 +3,9 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-You have to login to use this page.
+    {% if user %}
+        Nothing on the home page yet
+    {% else %}
+        You have to login to use this page.
+    {% endif %}
 {% endblock %}
