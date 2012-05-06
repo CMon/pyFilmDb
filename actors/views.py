@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, get_object_or_404
-from django.template import Context
+from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from actors.models import Actor
 
@@ -15,7 +15,7 @@ def actors(request, letter):
     print letter
     print allActors
 
-    context = Context({
+    context = RequestContext(request, {
         'actors': allActors,
     })
     return render_to_response('actor/actors.html', context)
@@ -23,7 +23,7 @@ def actors(request, letter):
 def detail(request, slug):
     actor = Actor.objects.filter(id=slug)
 
-    context = Context({
+    context = RequestContext(request, {
         'actor': actor,
         })
     return render_to_response('actor/actorDetail.html', context)

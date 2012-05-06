@@ -1,9 +1,9 @@
 import os
-from django.template import Context, loader
+from django.template import RequestContext, loader
 from django.conf import settings
 from movies.models import Movie, Scene
 from directors.models import Director
-from actors.models import Actor, Person
+from actors.models import Actor
 from genres.models import Genre
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
@@ -18,7 +18,7 @@ def index(request):
         allMovies = Movie.objects.filter(restrictedView=False)
 
     template = loader.get_template('movie/movie.html')
-    context = Context({
+    context = RequestContext(request, {
         'movies': allMovies,
     })
 
@@ -71,7 +71,7 @@ def detail(request, slug):
     movie.genres = Genre.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
     movie.duration = __secondsToDurationString(durationInSeconds)
 
-    context = Context({
+    context = RequestContext(request, {
         'movie'  : movie,
         'scenes' : scenes,
         'mediaBasePath' : settings.MOVIE_BASE_DIR
@@ -90,7 +90,7 @@ def sceneList(request):
 
     allScenes, durationInSeconds = __enhanceSceneObject(allScenes, user)
 
-    context = Context({
+    context = RequestContext(request, {
         'scenes': allScenes,
     })
 

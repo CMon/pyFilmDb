@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.template import Context, loader
+from django.template import RequestContext, loader
 from django.contrib.auth import authenticate, login, logout, get_user
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,7 @@ def index(request):
         user = get_user(request)
 
     template = loader.get_template('user/detail.html')
-    context = Context({
+    context = RequestContext(request, {
         'user':        user,
         'permissions': user.get_all_permissions(),
         'groups':      user.get_group_permissions()
@@ -35,13 +35,12 @@ def dbLogin(request):
             return redirect('/movies')
         else:
             logger.error('User with disabled login(%s) tried to login' % username)
-            return HttpResponse(template.render(Context({'disabledAccount' : True})))
+            return HttpResponse(template.render(RequestContext(request, {'disabledAccount' : True})))
     else:
         logger.error('Invalid User(%s) tried to login' % username)
-        return HttpResponse(template.render(Context({'invalidAccount' : True})))
+        return HttpResponse(template.render(RequestContext(request, {'invalidAccount' : True})))
 
 @login_required(login_url="/")
 def dbLogout(request):
-    logout()
-    print request.user
+    logout(request)
     return redirect('/')

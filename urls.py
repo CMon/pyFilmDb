@@ -20,9 +20,10 @@ urlpatterns += patterns('movies.views',
 )
 
 urlpatterns += patterns('user.view',
-    url(r'^$',         direct_to_template, {'template' : 'user/login.html'}),
-    url(r'^user/$',    'index',       name='user_index'),
-    url(r'^dbLogin$',  'dbLogin',     name='dbLogin'),
+    url(r'^$',             direct_to_template, {'template' : 'user/login.html'}),
+    url(r'^user/$',        'index',       name='user_index'),
+    url(r'^dbLogin$',      'dbLogin',     name='dbLogin'),
+    url(r'^user/logout/$', 'dbLogout',    name='dbLogout'),
 )
 
 urlpatterns += patterns('general.views',
@@ -33,7 +34,7 @@ urlpatterns += patterns('general.views',
 )
 
 urlpatterns += patterns('actors.views',
-    url(r'^actors/$',                       direct_to_template, {'template' : 'actor/actors.html'}),
+    url(r'^actors/$',                       direct_to_template, {'template' : 'actor/actors.html'}, name='actors'),
     url(r'^actors/actors_(?P<letter>.*)/$', 'actors'),
     url(r'^actors/(?P<slug>.*)/$',          'detail', name='actor_detail'),
 )

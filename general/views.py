@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from movies.models import Movie, Scene
-from django.template import Context, loader
+from django.template import RequestContext, loader
 from django.db.models import Q
 from django.contrib.auth.decorators import permission_required
 
@@ -11,7 +11,7 @@ def simpleSearch(request):
     searchedMovies = Movie.objects.filter(Q(title__contains=searchTerm) | Q(description__contains=searchTerm))
     #TODO search also in genres and actors and accumulate the movies
     template = loader.get_template('movie/movie.html')
-    context = Context({
+    context = RequestContext(request, {
         'movies': searchedMovies,
     })
     return HttpResponse(template.render(context))
@@ -25,7 +25,7 @@ def extendedSearch(request):
     titleMovies = Movie.objects.filter(Q(title__contains=title))
     #TODO search also in genres and actors and accumulate the movies
     template = loader.get_template('movie/movie.html')
-    context = Context({
+    context = RequestContext(request, {
         'movies': titleMovies,
     })
     return HttpResponse(template.render(context))
