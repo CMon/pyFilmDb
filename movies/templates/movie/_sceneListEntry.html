@@ -1,9 +1,10 @@
 {% if scene.isRestricted %}
     <tr><td colspan="4" align="left">Restriced Scene: {{ scene.title }}</td></tr>
 {% else %}
-    <tr class="header"><th align="left">{{ scene.title }}</th><th>Actors</th><th>Genres</th><th>Play</th></tr>
+    <tr class="header"><th align="left">{{ scene.title }}</th><th>Actors</th><th>Genres</th><th></th></tr>
     <tr class="scene">
         <td class="animatedGif">
+            {# instead of the path to the scene link to a scene Detail where the movie can be seen in detail, than remove the play part of the list#}
             <a href="{{ scene.sceneRelPath }}">
                 {% if movie.backCover %}
                     <img src="{{ scene.stillImage }}" onmouseover="{{ scene.animatedImage }}" alt="{{ scene.title }}">

@@ -20,7 +20,6 @@
 </h3>
 
 <table>
-    <tr><td>Front</td><td>Back</td></tr>
     <tr>
         <td align="center" class="coverPicture">
             {% if movie.frontCover %}
@@ -37,12 +36,13 @@
             {% endif %}
         </td>
     </tr>
+    <tr align="center" style="font-size: smaller;"><td>Front</td><td>Back</td></tr>
 </table>
 
-<table>
-    <tr><td>Duration:</td><td>{{ movie.duration }}</td></tr>
-    <tr>
-        <td>Actors:</td>
+<table style="padding-top: 15px;">
+    <tr><td>Duration</td><td>{{ movie.duration }}</td></tr>
+    <tr valign="top">
+        <td>Actors</td>
         <td>
             {% if movie.actors %}
                 {% for actor in movie.actors %}
@@ -54,13 +54,13 @@
        </td>
     </tr>
     {% if movie.description %}
-    <tr>
-        <td>Description:</td>
+    <tr valign="top">
+        <td>Description</td>
         <td>{{ movie.description }}</td>
     </tr>
     {% endif %}
-    <tr>
-        <td>Genres:</td>
+    <tr valign="top">
+        <td>Genres</td>
         <td>
             {% if movie.genres %}
                 {% for genre in movie.genres %}
@@ -71,28 +71,21 @@
             {% endif %}
         </td>
     </tr>
+    {% if scenes %}
+        <tr valign="top">
+            <td>Scenes</td>
+            <td>
+                <div class="scenes">
+                    <table class="scenesTable">
+                        {% for scene in scenes %}
+                            {% include "movie/_sceneListEntry.html" with scene=scene %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </td>
+        </tr>
+    {% endif %}
 </table>
 
-{% if movie.movieRelPath %}
-    <div id="videoPlayer">
-        <p id="container1">Please install the Flash Plugin</p>
-        <script type="text/javascript">
-            var flashvars = { file:'{{ mediaBasePath }}/{{ movie.movieRelPath }}',autostart:'false' };
-            var params = { allowfullscreen:'true', allowscriptaccess:'always' };
-            var attributes = { id:'playerID', name:'playerName' };
-            swfobject.embedSWF('/static/js/vendor/player.swf','container1','240','135','9.0.115','false', flashvars, params, attributes);
-        </script>
-    </div>
-{% endif %}
-
-{% if scenes %}
-<div class="scenes">
-    <table class="scenesTable">
-        {% for scene in scenes %}
-            {% include "movie/_sceneListEntry.html" with scene=scene %}
-        {% endfor %}
-    </table>
-</div>
-{% endif %}
 
 {% endblock %}
