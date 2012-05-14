@@ -46,7 +46,7 @@
         <td>
             {% if movie.actors %}
                 {% for actor in movie.actors %}
-                    <a href="/actor/{{ actor }}/">{{ actor }}</a>,
+                    <a href="/actors/{{ actor.person.id }}">{{ actor }}</a>,
                 {% endfor %}
             {% else %}
             -
@@ -107,7 +107,7 @@
                     <td class="actors">
                         {% if scene.actors %}
                             {% for actor in scene.actors %}
-                                <a href="/actor/{{ actor }}/">{{ actor }}</a>,
+                                <a href="/actors/{{ actor.person.id }}">{{ actor }}</a>,
                             {% endfor %}
                         {% else %}
                         -

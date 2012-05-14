@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block style %}
     <style>
-        .test {
+        .pictureList {
             padding:0;
             margin:0;
             list-style-type:none;
         }
-        .test li {
+        .pictureList li {
             padding-left: 20px;
             float:left;
         }
@@ -26,7 +26,7 @@
 
 {% block content %}
     {% for actor in actors %}
-        <ul class="test">
+        <ul class="pictureList">
             <li>
                 <a href="/actors/{{ actor.person.id }}">
                 <table>

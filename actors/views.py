@@ -12,18 +12,18 @@ def actors(request, letter):
 
     if not allActors.count():
         allActors = None
-    print letter
-    print allActors
 
     context = RequestContext(request, {
         'actors': allActors,
     })
     return render_to_response('actor/actors.html', context)
 
+@login_required(login_url="/")
 def detail(request, slug):
-    actor = Actor.objects.filter(id=slug)
+    actor = get_object_or_404(Actor, id=slug)
 
     context = RequestContext(request, {
         'actor': actor,
-        })
+    })
+
     return render_to_response('actor/actorDetail.html', context)
