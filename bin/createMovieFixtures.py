@@ -30,7 +30,7 @@ def getElemntText(element, tagname):
         return ""
     return text[0]
 
-def newFileHashMapElemnt(hash, duration, animatedPreviewPath, stillPreviewPath):
+def newFileHashMapElement(hash, duration, animatedPreviewPath, stillPreviewPath):
     return dict([
         ('hash', hash),
         ('duration', duration),
@@ -65,7 +65,7 @@ def parseFixturesFile():
         stillPreviewPath    = getElemntText(element, "stillPreviewPath")
 
 
-        fileHashMap[filename] = newFileHashMapElemnt(hash, duration, animatedPreviewPath, stillPreviewPath)
+        fileHashMap[filename] = newFileHashMapElement(hash, duration, animatedPreviewPath, stillPreviewPath)
 
     fixturesFile.close()
     return fileHashMap
@@ -162,7 +162,7 @@ def incrementalHashGeneration(basePath, fileHashMap):
                 fileHashMap[fileBaseName]['hash'] = sha256
             else:
                 sha256 = calculateHash(file)
-                fileHashMap[fileBaseName] = newFileHashMapElemnt(sha256, "", "")
+                fileHashMap[fileBaseName] = newFileHashMapElement(sha256, 0, "", "")
 
     except KeyboardInterrupt, e:
         print "Interrupted hash creation storing files now"
