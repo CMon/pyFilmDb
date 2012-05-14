@@ -16,8 +16,8 @@ class Command(BaseCommand):
         # read xml file and add movie and scene
         try:
             tree = etree.parse(fixtureFile)
-        except:
-            raise CommandError("xml parse error of file: " + fixtureFile + ". Error: " + e)
+        except Exception as e:
+            raise CommandError("xml parse error of file: " + fixtureFile + ". Error: ", e)
 
         for element in tree.xpath("/fixtures/entry"):
             # read values

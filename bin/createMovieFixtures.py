@@ -12,7 +12,7 @@ parser = OptionParser()
 parser.add_option("-b", "--basePath",             dest="basePath",        default=homedir+"/Downloads/", help="set the base directory from where all movies are searched")
 parser.add_option("-c", "--createHash",           dest="createHash",      action="store_true",           help="create hash values for found movies")
 parser.add_option("-d", "--updateDurations",      dest="updateDurations", action="store_true",           help="update duration fields for existing hashed files")
-parser.add_option("-a", "--updateAnimatedImages", dest="updateAnimated",  default=None,                  help="create animated Preview gifs for those who do not have them argument is the destination to place the gif")
+parser.add_option("-a", "--updateAnimatedImages", dest="updateAnimated",  default=None,                  help="create animated Preview gifs for those who do not have them, argument is the destination to place the gif")
 
 AllowedExtensions=[
     ".wmv",
@@ -169,7 +169,11 @@ def incrementalHashGeneration(basePath, fileHashMap):
 
     print "Finished creation of hashes, do not press CTRL+C now, because we are storing the file now"
 
-    checkForDuplicates(fileHashMap)
+    try:
+        checkForDuplicates(fileHashMap)
+    except Exception, e:
+        # do not stop before writing
+        print e
     writeFixturesFile(fileHashMap)
 
 def updateDurations(basePath, fileHashMap):
