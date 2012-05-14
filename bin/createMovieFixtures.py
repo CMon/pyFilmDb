@@ -48,8 +48,8 @@ def parseFixturesFile():
 
     try:
         tree = etree.parse(fixturesFile)
-    except:
-        print "parse Error"
+    except Exception, e:
+        print "parse Error: ", e
         return fileHashMap
 
     for element in tree.xpath("/fixtures/entry"):
@@ -148,7 +148,8 @@ def incrementalHashGeneration(basePath, fileHashMap):
     files = []
     listFiles(basePath, files)
 
-    print "Incremental Hash creation started (this can be interrupted with CTRL+C, in case of interruption the partly created hashes will be stored)"
+    print "Incremental Hash creation started"
+    print " (Press CTRL+C to interrupt, already hashed movies will be stored)"
 
     try:
         for file in files:
@@ -179,13 +180,18 @@ def incrementalHashGeneration(basePath, fileHashMap):
 def updateDurations(basePath, fileHashMap):
     pp = PreviewPictures()
 
+    print "Incremental update durations started"
+    print " (Press CTRL+C to interrupt, completed movies will be stored)"
     somethingChanged = False
-    for file in fileHashMap.keys():
-        if fileHashMap[file]['duration'] == "":
-            fullFilePath = basePath + "/" + file
-            print "Setting Duration of " + fullFilePath
-            fileHashMap[file]['duration'] = pp.getDuration(fullFilePath)
-            somethingChanged = True
+    try:
+        for file in fileHashMap.keys():
+            if fileHashMap[file]['duration'] == "":
+                fullFilePath = basePath + "/" + file
+                print "Setting Duration of " + fullFilePath
+                fileHashMap[file]['duration'] = pp.getDuration(fullFilePath)
+                somethingChanged = True
+    except KeyboardInterrupt, e:
+        print "Interrupted update of Durations storing files now"
 
     if somethingChanged:
         writeFixturesFile(fileHashMap)
@@ -196,6 +202,8 @@ def updateDurations(basePath, fileHashMap):
 def updateAnimatedGifs(basePath, pathForMediaStorage, fileHashMap):
     pp = PreviewPictures()
 
+    print "Incremental update animated gifs started"
+    print " (Press CTRL+C to interrupt, completed movies will be stored)"
     somethingChanged = False
     for file in fileHashMap.keys():
         if fileHashMap[file]['animatedPreviewPath'] == "":
