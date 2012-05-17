@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load scene_extras %}
+{% load scene_extras general_extras %}
 
 {% block title %}{{ scene.title }}{% endblock %}
 
@@ -17,14 +17,14 @@
                                 var flashvars = { file:'{{ mediaBasePath }}/{{ scene.sceneRelPath }}',autostart:'false' };
                                 var params = { allowfullscreen:'true', allowscriptaccess:'always' };
                                 var attributes = { id:'playerID', name:'playerName' };
-                                swfobject.embedSWF('/static/js/vendor/player.swf','container1','240','135','9.0.115','false', flashvars, params, attributes);
+                                swfobject.embedSWF('{{ STATIC_URL }}/js/vendor/player.swf','container1','240','135','9.0.115','false', flashvars, params, attributes);
                             </script>
                         </div>
                     {% else %}
                         Movie format not supported.
                     {% endif %}
                 {% else %}
-                    <img src="/static/img/x.png" width="200" height="160" alt="{{ scene.title }}">
+                    <img src="{{ STATIC_URL }}/img/x.png" width="200" height="160" alt="{{ scene.title }}">
                 {% endif %}
             </td>
         </tr>
@@ -37,14 +37,13 @@
         </tr>
 
         <tr>
+            <td>Movie:</td>
+            <td>{{ scene.movie.title|setValue }}</td>
+        </tr>
+
+        <tr>
             <td>Description:</td>
-            <td>
-                {% if scene.description %}
-                    {{ scene.description }}
-                {% else %}
-                    -
-                {% endif %}
-            </td>
+            <td>{{ scene.description|setValue }}</td>
         </tr>
 
         <tr>

@@ -1,11 +1,5 @@
 <h1>{{ person.getFullName }}</h1>
-{% if person.picture %}
-    <a href="{{ person.picture.url }}">
-        <img src="{{ person.picture.url }}" width="100" height="150" alt="{{ person.getFullName }}">
-    </a>
-{% else %}
-    <img src="/static/img/x.png" width="100" height="150" alt="{{ person.getFullName }}">
-{% endif %}
+{% include "general/__imageEntry.html" with imageField=person.picture alt=person.getFullName width=100 height=150 link="image" %}
 
 <table class="personDetailTable">
     <tr align="left"><th>Gender</th>

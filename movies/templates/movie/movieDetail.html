@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load scene_extras %}
+{% load scene_extras general_extras %}
 
 {% block title %}{{ movie.title }}{% endblock %}
 
@@ -23,27 +23,19 @@
 <table>
     <tr>
         <td align="center" class="coverPicture">
-            {% if movie.frontCover %}
-                <img src="{{ movie.frontCover.url }}" width="200" alt="Front">
-            {% else %}
-                <img src="/static/img/x.png" width="200" height="221" alt="No Front Cover">
-            {% endif %}
+            {% include "general/__imageEntry.html" with imageField=movie.frontCover alt="Front" width=200 link="image" %}
         </td>
-        <td>
-            {% if movie.backCover %}
-                <img src="{{ movie.backCover.url }}" width="200" alt="Back">
-            {% else %}
-                <img src="/static/img/x.png" width="200" height="221" alt="Back">
-            {% endif %}
+        <td align="center" class="coverPicture">
+            {% include "general/__imageEntry.html" with imageField=movie.backCover alt="Back" width=200 link="image" %}
         </td>
     </tr>
     <tr align="center" style="font-size: smaller;"><td>Front</td><td>Back</td></tr>
 </table>
 
 <table style="padding-top: 15px;">
-    <tr><td>Duration</td><td>{{ movieDuration|durationToString }}</td></tr>
+    <tr><td>Duration:</td><td>{{ movieDuration|durationToString }}</td></tr>
     <tr valign="top">
-        <td>Actors</td>
+        <td>Actors:</td>
         <td>
             {% if movie.actors %}
                 {% for actor in movie.actors %}
@@ -54,14 +46,14 @@
             {% endif %}
        </td>
     </tr>
-    {% if movie.description %}
+
     <tr valign="top">
-        <td>Description</td>
-        <td>{{ movie.description }}</td>
+        <td>Description:</td>
+        <td>{{ movie.description|setValue }}</td>
     </tr>
-    {% endif %}
+
     <tr valign="top">
-        <td>Genres</td>
+        <td>Genres:</td>
         <td>
             {% if movie.genres %}
                 {% for genre in movie.genres %}
@@ -72,15 +64,10 @@
             {% endif %}
         </td>
     </tr>
-    {% if scenes %}
-        <tr valign="top">
-            <td>Scenes</td>
-            <td>
-                {% include "scene/_sceneListTable.html" with scenes=scenes %}
-            </td>
-        </tr>
-    {% endif %}
+    <tr valign="top">
+        <td>Scenes:</td>
+        <td>{% include "scene/_sceneListTable.html" with scenes=scenes %}</td>
+    </tr>
 </table>
-
 
 {% endblock %}

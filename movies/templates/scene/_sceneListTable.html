@@ -10,7 +10,7 @@
                         {% if movie.backCover %}
                             <img src="{{ scene.stillImage }}" onmouseover="{{ scene.animatedImage }}" width="200" height="160" alt="{{ scene.title }}">
                         {% else %}
-                            <img src="/static/img/x.png" width="200" height="160" alt="{{ scene.title }}">
+                            <img src="{{ STATIC_URL }}/img/x.png" width="200" height="160" alt="{{ scene.title }}">
                         {% endif %}
                     </a>
                 </td>

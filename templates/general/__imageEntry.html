@@ -1,0 +1,11 @@
+{% if imageField %}
+    {% if link == "image" %}
+        <a href="{{ imageField.url }}">
+    {% endif %}
+        <img src="{{ imageField.url }}" width="{{ width }}" height="{{ height }}" alt="{{ alt }}">
+    {% if link == "image" %}
+        </a>
+    {% endif %}
+{% else %}
+    <img src="{{ STATIC_URL }}/img/x.png" width="{{ width }}" height="{{ height }}" alt="{{ alt }}">
+{% endif %}

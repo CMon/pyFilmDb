@@ -30,16 +30,12 @@
             <li>
                 <a href="/actors/{{ actor.id }}">
                 <table>
-                    <tr align="center"><td>
-                    {% if actor.person.picture %}
-                        <img src="{{ actor.person.picture.url }}" width="100" height="150" alt="{{ actor.person.getFullName }}">
-                    {% else %}
-                        <img src="/static/img/x.png" width="100" height="150" alt="{{ actor.person.getFullName }}">
-                    {% endif %}
-                    </td></tr>
-                    <tr><td>
-                    {{ actor.person.firstName }} {{ actor.person.lastName }}
-                    </td></tr>
+                    <tr align="center">
+                        <td>{% include "general/__imageEntry.html" with imageField=actor.person.picture alt=actor.person.getFullName width=100 height=150 %}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ actor.person.firstName }} {{ actor.person.lastName }}</td>
+                    </tr>
                 </table>
                 </a>
             </li>

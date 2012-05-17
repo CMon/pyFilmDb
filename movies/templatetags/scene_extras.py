@@ -11,7 +11,6 @@ def __secondsToDurationString(seconds):
 
 @register.filter
 def allowedToView(value, user):
-    print value, user
     if user.has_perm('movies.allowedRestricted'):
         return True
     return not value.restrictedView
