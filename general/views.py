@@ -12,8 +12,14 @@ def simpleSearch(request):
 
     if searchTerm:
         error = None
-        #TODO search also in genres and actors and accumulate the movies
-        scenes = Scene.objects.filter(Q(title__icontains=searchTerm) | Q(description__icontains=searchTerm))
+        scenes = Scene.objects.filter(
+            Q(title__icontains=searchTerm) |
+            Q(description__icontains=searchTerm) |
+            Q(actor__person__firstName__icontains=searchTerm) |
+            Q(actor__person__lastName__icontains=searchTerm) |
+            Q(genre__shortDescription__icontains=searchTerm) |
+            Q(genre__longDescription__icontains=searchTerm)
+        )
     else:
         error = "Search Term is empty."
         scenes = None
