@@ -27,14 +27,14 @@ urlpatterns += patterns('user.view',
 )
 
 urlpatterns += patterns('general.views',
-    url(r'^search/$',         login_required(direct_to_template), {'template' : 'general/search.html'}),
+    url(r'^search/$',         login_required(direct_to_template), {'template' : 'general/simpleSearch.html'}),
     url(r'^simpleSearch/$',   'simpleSearch',     name='simpleSearch'),
     url(r'^esearch/$',        'eSearchView',      name='eSearchView'),
     url(r'^extendedSearch/$', 'extendedSearch',   name='extendedSearch'),
 )
 
 urlpatterns += patterns('actors.views',
-    url(r'^actors/$',                       direct_to_template, {'template' : 'actor/actors.html'}, name='actors'),
+    url(r'^actors/$',                       direct_to_template, {'template' : 'actor/actorList.html'}, name='actors'),
     url(r'^actors/actors_(?P<letter>.*)/$', 'actors'),
     url(r'^actors/(?P<slug>.*)/$',          'detail', name='actor_detail'),
 )

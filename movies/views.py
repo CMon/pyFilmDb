@@ -17,7 +17,7 @@ def index(request):
     else:
         allMovies = Movie.objects.filter(restrictedView=False)
 
-    template = loader.get_template('movie/movie.html')
+    template = loader.get_template('movie/movieList.html')
     context = RequestContext(request, {
         'movies': allMovies,
     })
@@ -58,7 +58,7 @@ def detail(request, slug):
     user = request.user
     movie = get_object_or_404(Movie, slug=slug)
     if movie.restrictedView and not user.has_perm('movies.allowedRestricted'):
-        return render_to_response('movie/restricted.html')
+        return render_to_response('movie/restrictedMovie.html')
 
     directors = Director.objects.filter(movies=movie)
 
@@ -77,7 +77,7 @@ def detail(request, slug):
         'mediaBasePath' : settings.MOVIE_BASE_DIR
     })
 
-    return render_to_response('movie/detail.html', context)
+    return render_to_response('movie/movieDetail.html', context)
 
 @permission_required('movies.watch', login_url="/")
 def sceneList(request):

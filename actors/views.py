@@ -16,7 +16,7 @@ def actors(request, letter):
     context = RequestContext(request, {
         'actors': allActors,
     })
-    return render_to_response('actor/actors.html', context)
+    return render_to_response('actor/actorList.html', context)
 
 @login_required(login_url="/")
 def detail(request, slug):

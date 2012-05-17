@@ -12,7 +12,7 @@ def simpleSearch(request):
     print searchTerm
     searchedMovies = Movie.objects.filter(Q(title__contains=searchTerm) | Q(description__contains=searchTerm))
     #TODO search also in genres scenes.title and actors and accumulate the movies
-    template = loader.get_template('movie/movie.html')
+    template = loader.get_template('movie/movieList.html')
     context = RequestContext(request, {
         'movies': searchedMovies,
     })
@@ -26,7 +26,7 @@ def extendedSearch(request):
     print title, actor, genre
     titleMovies = Movie.objects.filter(Q(title__contains=title))
     #TODO search also in genres and actors and accumulate the movies
-    template = loader.get_template('movie/movie.html')
+    template = loader.get_template('movie/movieList.html')
     context = RequestContext(request, {
         'movies': titleMovies,
     })
