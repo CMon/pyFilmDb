@@ -7,7 +7,6 @@ from actors.models import Actor
 from genres.models import Genre
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
-from django.db.models import Q
 from django.contrib.auth.decorators import permission_required
 
 @permission_required('movies.watch', login_url="/")
@@ -52,7 +51,7 @@ def detail(request, slug):
 
     movie.directors = directors
     movie.studio = "STUDIOTODO"
-    movie.actors = Actor.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
+    movie.actors = Actor.objects.filter(scenes__in=scenes).distinct()
     movie.genres = Genre.objects.filter(scenes__in=scenes).distinct()
     duration = __getDurationFromScenes(scenes)
 

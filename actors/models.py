@@ -28,7 +28,6 @@ class Actor(models.Model):
     id = models.AutoField(primary_key=True)
     person = models.ForeignKey(Person)
     scenes = models.ManyToManyField('movies.Scene', blank=True, null=True)
-    movies = models.ManyToManyField('movies.Movie', blank=True, null=True)
 
     @models.permalink
     def getAbsoluteUrl(self):

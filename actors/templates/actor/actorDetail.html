@@ -23,32 +23,11 @@
     {% include "actor/personDetail.html" with person=actor.person %}
     <div id="space"></div>
     <table class="actorDetailTable">
-        <tr align="left" valign="top"><th>Movies</th>
-            <td>
-                <ul>
-                    {% for movie in actor.movies.all %}
-                        <li>
-                            {% if movie.getAbsoluteUrl %}
-                                <a href="{{ movie.getAbsoluteUrl }}">{{ movie.title }}</a>
-                            {% else %}
-                                {{ movie.title }}
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </td>
-        </tr>
-        <tr align="left" valign="top"><th>Scenes</th>
+        <tr align="left" valign="top"><th>Scenes:</th>
             <td>
                 <ul>
                     {% for scene in actor.scenes.all %}
-                        <li>
-                        {% if scene.sceneRelPath %}
-                            <a href="{{ scene.sceneRelPath }}">{{ scene.title }}</a>
-                        {% else %}
-                            {{ scene.title }}
-                        {% endif %}
-                        </li>
+                        <li><a href="/scenes/{{ scene.sha256 }}">{{ scene.movie.title }}: {{ scene.title }}</a></li>
                     {% endfor %}
                 </ul>
             </td>
