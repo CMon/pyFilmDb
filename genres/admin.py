@@ -1,4 +1,7 @@
 from genres.models import Genre
 from django.contrib import admin
 
-admin.site.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("shortDescription",)}
+
+admin.site.register(Genre, GenreAdmin)

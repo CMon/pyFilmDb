@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Genre list{% endblock %}
+
+{% block content %}
+    {% if genres %}
+        <ul>
+            {% for genre in genres %}
+                <li><a href="/genres/{{ genre.slug }}">{{ genre.shortDescription }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

@@ -39,6 +39,11 @@ urlpatterns += patterns('actors.views',
     url(r'^actors/(?P<slug>.*)/$',          'detail', name='actor_detail'),
 )
 
+urlpatterns += patterns('genres.views',
+    url(r'^genres/$',                       'genres', name='genres'),
+    url(r'^genres/(?P<slug>.*)/$',          'detail', name='genre_detail'),
+)
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, 'django.views.static.serve', document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, 'django.contrib.staticfiles.views.serve', document_root=settings.STATIC_ROOT)

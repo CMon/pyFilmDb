@@ -13,7 +13,7 @@
         background-color: #EFEFEF;
         }
         #container {
-            width:  780px;
+            width:  90%;
             margin: 0 auto;
             background-color: #FFF;
             padding: 20px;
@@ -55,6 +55,7 @@
             <li><a href="{% url movie_index %}">Movies</a></li>
             <li><a href="{% url sceneList %}">Scenes</a></li>
             <li><a href="{% url actors %}">Actors</a></li>
+            <li><a href="{% url genres %}">Genres</a></li>
             <li><a href="{% url user_index %}">My Account</a></li>
             {% if not user.is_authenticated %}
                 <li>

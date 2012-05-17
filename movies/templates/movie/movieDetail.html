@@ -64,7 +64,7 @@
         <td>
             {% if movie.genres %}
                 {% for genre in movie.genres %}
-                    <a href="/genre/{{ genre.shortDescription }}/">{{ genre.shortDescription }}</a>,
+                    <a href="/genres/{{ genre.slug }}/">{{ genre.shortDescription }}</a>,
                 {% endfor %}
             {% else %}
             -

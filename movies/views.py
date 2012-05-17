@@ -50,7 +50,7 @@ def __enhanceSceneObject(scene, user):
         scene.supportedFormat = __isSupportedPlaybackFormat(scene)
     return scene, scene.duration
 
-def __enhanceScenesList(scenes, user):
+def enhanceScenesList(scenes, user):
     durationOfAllScenes = 0
     for scene in scenes:
         scene, duration = __enhanceSceneObject(scene, user)
@@ -72,7 +72,7 @@ def detail(request, slug):
     movie.directors = directors
     movie.studio = "STUDIOTODO"
     movie.actors = Actor.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
-    movie.genres = Genre.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
+    movie.genres = Genre.objects.filter(scenes__in=scenes).distinct()
     movie.duration = __secondsToDurationString(durationInSeconds)
 
     context = RequestContext(request, {

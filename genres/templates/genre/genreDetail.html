@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}{{ genre.shortDescription }}{% endblock %}
+
+{% block content %}
+    <table class="sceneDetail">
+        <tr><td>Short description:</td><td>{{ genre.shortDescription }}</td></tr>
+        <tr><td>Long description:</td><td>{{ genre.longDescription }}</td></tr>
+        <tr>
+            <td valign="top">Scenes:</td>
+            <td>
+                {% include "scene/_sceneListTable.html" with scenes=scenes %}
+            </td>
+        </tr>
+    </table>
+{% endblock %}
