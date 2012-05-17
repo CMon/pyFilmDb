@@ -1,0 +1,28 @@
+<h1>{{ person.getFullName }}</h1>
+{% if person.picture %}
+    <a href="{{ person.picture.url }}">
+        <img src="{{ person.picture.url }}" width="100" height="150" alt="{{ person.getFullName }}">
+    </a>
+{% else %}
+    <img src="/static/img/x.png" width="100" height="150" alt="{{ person.getFullName }}">
+{% endif %}
+
+<table class="personDetailTable">
+    <tr align="left"><th>Gender</th>
+        <td>
+            {% if person.gender == "f" %}
+                &#9792;
+            {% elif person.gender == "m" %}
+                &#9794;
+            {% else %}
+                &#9906;
+            {% endif %}
+        </td>
+    </tr>
+    <tr align="left"><th>Birthday</th><td>{{ person.birthday }}</td></tr>
+    <tr align="left"><th>Alternative Names</th><td>{{ person.alternativeNames }}</td></tr>
+    <tr align="left"><th>Description</th><td>{{ person.description }}</td></tr>
+    <tr align="left"><th>Ethnicity</th><td>{{ person.ethnicity }}</td></tr>
+    <tr align="left"><th>External Link</th><td><a href="{{ person.link }}">{{ person.link }}</a></td></tr>
+    <tr align="left"><th>Detailed Information</th><td>{{ person.detailedInformation }}</td></tr>
+</table>

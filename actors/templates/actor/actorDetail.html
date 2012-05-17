@@ -1,55 +1,35 @@
 {% extends "base.html" %}
 {% block style %}
     <style>
-        .actorDetailTable {
+        .actorDetailTable, .personDetailTable {
             margin: 0;
         }
-        .actorDetailTable td {
+        .actorDetailTable td, .personDetailTable td {
             padding-left: 20px;
         }
         .actorDetailTable ul {
             list-style-type: circle;
             padding-left: 0px;
         }
+        #space {
+            height: 30px
+        }
     </style>
 {% endblock %}
 
-{% block title %}{{ firstName }} {{ lastName }}{% endblock %}
+{% block title %}{{ actor.person.getFullName }}{% endblock %}
 
 {% block content %}
-    <h1>{{ actor.person.firstName }} {{ actor.person.lastName }}</h1>
-    {% if actor.person.picture %}
-        <a href="{{ actor.person.picture.url }}">
-            <img src="{{ actor.person.picture.url }}" width="100" height="150" alt="{{ actor.person.firstName }} {{ actor.person.lastName }}">
-        </a>
-    {% else %}
-        <img src="/static/img/x.png" width="100" height="150" alt="{{ actor.person.firstName }} {{ actor.person.lastName }}">
-    {% endif %}
-
+    {% include "actor/personDetail.html" with person=actor.person %}
+    <div id="space"></div>
     <table class="actorDetailTable">
-        <tr align="left"><th>Gender</th>
-            <td>
-                {% if actor.person.gender == "f" %}
-                    &#9792;
-                {% elif actor.person.gender == "m" %}
-                    &#9794;
-                {% else %}
-                    &#9906;
-                {% endif %}
-            </td>
-        </tr>
-        <tr align="left"><th>Alternative Names</th><td>{{ actor.person.alternativeNames }}</td></tr>
-        <tr align="left"><th>Description</th><td>{{ actor.person.description }}</td></tr>
-        <tr align="left"><th>Measurement</th><td>{{ actor.measurements }}</td></tr>
-        <tr align="left"><th>Ethnicity</th><td>{{ actor.ethnicity }}</td></tr>
-        <tr align="left"><th>External Link</th><td><a href="{{ actor.link }}">{{ actor.link }}</a></td></tr>
         <tr align="left" valign="top"><th>Movies</th>
             <td>
                 <ul>
                     {% for movie in actor.movies.all %}
                         <li>
-                            {% if movie.get_absolute_url %}
-                                <a href="{{ movie.get_absolute_url }}">{{ movie.title }}</a>
+                            {% if movie.getAbsoluteUrl %}
+                                <a href="{{ movie.getAbsoluteUrl }}">{{ movie.title }}</a>
                             {% else %}
                                 {{ movie.title }}
                             {% endif %}

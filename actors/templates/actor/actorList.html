@@ -30,11 +30,11 @@
             <li>
                 <a href="/actors/{{ actor.person.id }}">
                 <table>
-                    <tr><td>
+                    <tr align="center"><td>
                     {% if actor.person.picture %}
-                        <img src="{{ actor.person.picture.url }}" width="100" height="150" alt="{{ actor.person.firstName }} {{ actor.person.lastName }}">
+                        <img src="{{ actor.person.picture.url }}" width="100" height="150" alt="{{ actor.person.getFullName }}">
                     {% else %}
-                        <img src="/static/img/x.png" width="100" height="150" alt="{{ actor.person.firstName }} {{ actor.person.lastName }}">
+                        <img src="/static/img/x.png" width="100" height="150" alt="{{ actor.person.getFullName }}">
                     {% endif %}
                     </td></tr>
                     <tr><td>

@@ -4,7 +4,7 @@
     <tr class="header"><th align="left">{{ scene.title }}</th><th>Actors</th><th>Genres</th><th></th></tr>
     <tr class="scene">
         <td class="animatedGif">
-            {# instead of the path to the scene link to a scene Detail where the movie can be seen in detail, than remove the play part of the list#}
+            {# TODO: instead of the path to the scene link to a scene Detail where the movie can be seen in detail, than remove the play part of the list#}
             <a href="{{ scene.sceneRelPath }}">
                 {% if movie.backCover %}
                     <img src="{{ scene.stillImage }}" onmouseover="{{ scene.animatedImage }}" alt="{{ scene.title }}">
@@ -15,9 +15,8 @@
         </td>
         <td class="actors">
             {% if scene.actors %}
-                {# TODO: fix URL (has to be actor.id #}
                 {% for actor in scene.actors %}
-                    <a href="/actor/{{ actor }}/">{{ actor }}</a>,
+                    <a href="/actors/{{ actor.id }}/">{{ actor.person.getFullName }}</a>,
                 {% endfor %}
             {% else %}
                 -
@@ -33,6 +32,7 @@
             {% endif %}
         </td>
         <td class="play">
+        {# TODO: if the above is done then remove this block #}
             {% if scene.sceneRelPath %}
                 {% if scene.supportedFormat %}
                     <div id="videoPlayer">
