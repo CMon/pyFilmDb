@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf.urls.static import static
 from django.conf import settings
 
-# Uncomment the next two lines to enable the admin:
+# Comment the next two lines to disable the admin:
 from django.contrib import admin
 admin.autodiscover()
 

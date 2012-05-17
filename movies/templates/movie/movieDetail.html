@@ -75,13 +75,7 @@
         <tr valign="top">
             <td>Scenes</td>
             <td>
-                <div class="scenes">
-                    <table class="scenesTable">
-                        {% for scene in scenes %}
-                            {% include "movie/_sceneListEntry.html" with scene=scene %}
-                        {% endfor %}
-                    </table>
-                </div>
+                {% include "scene/_sceneListTable.html" with scenes=scenes %}
             </td>
         </tr>
     {% endif %}

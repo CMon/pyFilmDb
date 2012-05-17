@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Scene list{% endblock %}
+
+{% block content %}
+
+{% if scenes %}
+    <div class="scenes">
+        {% include "scene/_sceneListTable.html" with scenes=scenes %}
+    </div>
+{% endif %}
+
+{% endblock %}

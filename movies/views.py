@@ -40,17 +40,21 @@ def __secondsToDurationString(seconds):
     minutes = minutes % 60
     return '%d:%02d:%02d' % (hours, minutes, seconds)
 
-def __enhanceSceneObject(scenes, user):
-    durationOfAllScenes = 0
-    for scene in scenes:
-        if scene.restrictedView and not user.has_perm('movies.allowedRestricted'):
-            scene.isRestricted = True
-        else:
-            scene.isRestricted = False
+def __enhanceSceneObject(scene, user):
+    if scene.restrictedView and not user.has_perm('movies.allowedRestricted'):
+        scene.isRestricted = True
+    else:
+        scene.isRestricted = False
         scene.genres = Genre.objects.filter(scenes=scene)
         scene.actors = Actor.objects.filter(scenes=scene)
         scene.supportedFormat = __isSupportedPlaybackFormat(scene)
-        durationOfAllScenes += scene.duration
+    return scene, scene.duration
+
+def __enhanceScenesList(scenes, user):
+    durationOfAllScenes = 0
+    for scene in scenes:
+        scene, duration = __enhanceSceneObject(scene, user)
+        durationOfAllScenes += duration
     return scenes, durationOfAllScenes
 
 @permission_required('movies.watch', login_url="/")
@@ -63,7 +67,7 @@ def detail(request, slug):
     directors = Director.objects.filter(movies=movie)
 
     scenes = Scene.objects.filter(movie=movie)
-    scenes, durationInSeconds = __enhanceSceneObject(scenes, user)
+    scenes, durationInSeconds = __enhanceScenesList(scenes, user)
 
     movie.directors = directors
     movie.studio = "STUDIOTODO"
@@ -88,18 +92,24 @@ def sceneList(request):
     else:
         allScenes = Scene.objects.filter(restrictedView=False)
 
-    allScenes, durationInSeconds = __enhanceSceneObject(allScenes, user)
+    allScenes, durationInSeconds = __enhanceScenesList(allScenes, user)
 
     context = RequestContext(request, {
         'scenes': allScenes,
     })
 
-    return render_to_response('movie/sceneList.html', context)
+    return render_to_response('scene/sceneList.html', context)
 
 @permission_required('movies.watch', login_url="/")
 def sceneDetail(request, sha256):
-    print sha256
-    # get slug of movie of given scenes sha256
-    slug = "foo"
 
-    return detail(request, slug)
+    scene = get_object_or_404(Scene, sha256=sha256)
+    scene, duration = __enhanceSceneObject(scene, request.user)
+
+    context = RequestContext(request, {
+        'scene' : scene,
+        'duration': __secondsToDurationString(duration),
+        'mediaBasePath' : settings.MOVIE_BASE_DIR
+    })
+
+    return render_to_response('scene/sceneDetail.html', context)

@@ -37,6 +37,7 @@ class Scene(models.Model):
     sceneRelPath = models.CharField(max_length=500, blank=True, null=True)
     duration = models.IntegerField()
     restrictedView = models.BooleanField(default=False)
+    description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return self.sha256

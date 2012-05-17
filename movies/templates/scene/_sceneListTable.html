@@ -1,0 +1,43 @@
+
+<table class="scenesTable">
+    <tr class="header" align="left"><th>Preview</th> <th>Title</th> <th>Actors</th> <th>Genres</th></tr>
+    {% for scene in scenes %}
+        {% if scene.isRestricted %}
+            <tr><td colspan="4" align="left">Restriced Scene: {{ scene.title }}</td></tr>
+        {% else %}
+            <tr class="scene">
+                <td class="animatedGif">
+                    <a href="/scenes/{{ scene.sha256 }}">
+                        {% if movie.backCover %}
+                            <img src="{{ scene.stillImage }}" onmouseover="{{ scene.animatedImage }}" width="200" height="160" alt="{{ scene.title }}">
+                        {% else %}
+                            <img src="/static/img/x.png" width="200" height="160" alt="{{ scene.title }}">
+                        {% endif %}
+                    </a>
+                </td>
+
+                <td>{{ scene.title }}</td>
+
+                <td class="actors">
+                    {% if scene.actors %}
+                        {% for actor in scene.actors %}
+                            <a href="/actors/{{ actor.id }}/">{{ actor.person.getFullName }}</a>,
+                        {% endfor %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+
+                <td class="genres">
+                    {% if scene.genres %}
+                        {% for genre in scene.genres %}
+                            <a href="/genre/{{ genre.shortDescription }}/">{{ genre.shortDescription }}</a>,
+                        {% endfor %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>
