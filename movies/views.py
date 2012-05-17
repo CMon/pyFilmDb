@@ -33,29 +33,11 @@ def __isSupportedPlaybackFormat(scene):
 
     return False
 
-def __secondsToDurationString(seconds):
-    minutes = seconds / 60
-    seconds = seconds % 60
-    hours   = minutes / 60
-    minutes = minutes % 60
-    return '%d:%02d:%02d' % (hours, minutes, seconds)
-
-def __enhanceSceneObject(scene, user):
-    if scene.restrictedView and not user.has_perm('movies.allowedRestricted'):
-        scene.isRestricted = True
-    else:
-        scene.isRestricted = False
-        scene.genres = Genre.objects.filter(scenes=scene)
-        scene.actors = Actor.objects.filter(scenes=scene)
-        scene.supportedFormat = __isSupportedPlaybackFormat(scene)
-    return scene, scene.duration
-
-def enhanceScenesList(scenes, user):
+def __getDurationFromScenes(scenes):
     durationOfAllScenes = 0
     for scene in scenes:
-        scene, duration = __enhanceSceneObject(scene, user)
-        durationOfAllScenes += duration
-    return scenes, durationOfAllScenes
+        durationOfAllScenes += scene.duration
+    return durationOfAllScenes
 
 @permission_required('movies.watch', login_url="/")
 def detail(request, slug):
@@ -66,18 +48,18 @@ def detail(request, slug):
 
     directors = Director.objects.filter(movies=movie)
 
-    scenes = Scene.objects.filter(movie=movie)
-    scenes, durationInSeconds = __enhanceScenesList(scenes, user)
+    scenes = Scene.objects.filter(movie=movie).order_by('title')
 
     movie.directors = directors
     movie.studio = "STUDIOTODO"
     movie.actors = Actor.objects.filter(Q(scenes__in=scenes) | Q(movies=movie)).distinct()
     movie.genres = Genre.objects.filter(scenes__in=scenes).distinct()
-    movie.duration = __secondsToDurationString(durationInSeconds)
+    duration = __getDurationFromScenes(scenes)
 
     context = RequestContext(request, {
         'movie'  : movie,
         'scenes' : scenes,
+        'movieDuration': duration,
         'mediaBasePath' : settings.MOVIE_BASE_DIR
     })
 
@@ -85,30 +67,18 @@ def detail(request, slug):
 
 @permission_required('movies.watch', login_url="/")
 def sceneList(request):
-    user = request.user
-
-    if user.has_perm('movies.allowedRestricted'):
-        allScenes = Scene.objects.all().order_by('title')
-    else:
-        allScenes = Scene.objects.filter(restrictedView=False)
-
-    allScenes, durationInSeconds = __enhanceScenesList(allScenes, user)
-
+    scenes = Scene.objects.all().order_by('title')
     context = RequestContext(request, {
-        'scenes': allScenes,
+        'scenes': scenes,
     })
 
     return render_to_response('scene/sceneList.html', context)
 
 @permission_required('movies.watch', login_url="/")
 def sceneDetail(request, sha256):
-
     scene = get_object_or_404(Scene, sha256=sha256)
-    scene, duration = __enhanceSceneObject(scene, request.user)
-
     context = RequestContext(request, {
         'scene' : scene,
-        'duration': __secondsToDurationString(duration),
         'mediaBasePath' : settings.MOVIE_BASE_DIR
     })
 

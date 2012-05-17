@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load scene_extras %}
 
 {% block title %}{{ movie.title }}{% endblock %}
 
@@ -40,13 +41,13 @@
 </table>
 
 <table style="padding-top: 15px;">
-    <tr><td>Duration</td><td>{{ movie.duration }}</td></tr>
+    <tr><td>Duration</td><td>{{ movieDuration|durationToString }}</td></tr>
     <tr valign="top">
         <td>Actors</td>
         <td>
             {% if movie.actors %}
                 {% for actor in movie.actors %}
-                    <a href="/actors/{{ actor.person.id }}">{{ actor }}</a>,
+                    <a href="/actors/{{ actor.id }}">{{ actor.person.getFullName }}</a>,
                 {% endfor %}
             {% else %}
             -

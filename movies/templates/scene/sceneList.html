@@ -8,6 +8,12 @@
     <div class="scenes">
         {% include "scene/_sceneListTable.html" with scenes=scenes %}
     </div>
+{% else %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% else %}
+        <p class="error">No Scenes found.</p>
+    {% endif %}
 {% endif %}
 
 {% endblock %}

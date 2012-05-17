@@ -1,10 +1,9 @@
+{% load scene_extras %}
 
 <table class="scenesTable">
     <tr class="header" align="left"><th>Preview</th> <th>Title</th> <th>Actors</th> <th>Genres</th></tr>
     {% for scene in scenes %}
-        {% if scene.isRestricted %}
-            <tr><td colspan="4" align="left">Restriced Scene: {{ scene.title }}</td></tr>
-        {% else %}
+        {% if scene|allowedToView:user %}
             <tr class="scene">
                 <td class="animatedGif">
                     <a href="/scenes/{{ scene.sha256 }}">
@@ -19,8 +18,8 @@
                 <td>{{ scene.title }}</td>
 
                 <td class="actors">
-                    {% if scene.actors %}
-                        {% for actor in scene.actors %}
+                    {% if scene.actor_set.all %}
+                        {% for actor in scene.actor_set.all %}
                             <a href="/actors/{{ actor.id }}/">{{ actor.person.getFullName }}</a>,
                         {% endfor %}
                     {% else %}
@@ -29,8 +28,8 @@
                 </td>
 
                 <td class="genres">
-                    {% if scene.genres %}
-                        {% for genre in scene.genres %}
+                    {% if scene.genre_set.all %}
+                        {% for genre in scene.genre_set.all %}
                             <a href="/genres/{{ genre.slug }}/">{{ genre.shortDescription }}</a>,
                         {% endfor %}
                     {% else %}

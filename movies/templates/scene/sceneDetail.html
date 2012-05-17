@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load scene_extras %}
 
 {% block title %}{{ scene.title }}{% endblock %}
 
@@ -32,7 +33,7 @@
 
         <tr>
             <td>Runtime:</td>
-            <td>{{ duration }}</td>
+            <td>{{ scene.duration|durationToString }}</td>
         </tr>
 
         <tr>
@@ -49,8 +50,8 @@
         <tr>
             <td>Genres:</td>
             <td>
-                {% if scene.genres %}
-                    {% for genre in scene.genres %}
+                {% if scene.genre_set.all %}
+                    {% for genre in scene.genre_set.all %}
                         <a href="/genres/{{ genre.slug }}/">{{ genre.shortDescription }}</a>,
                     {% endfor %}
                 {% else %}
@@ -62,9 +63,9 @@
         <tr>
             <td>Actors:</td>
             <td>
-                {% if scene.actors %}
-                    {% for actor in scene.actors %}
-                        <a href="/actors/{{ actor.person.id }}">{{ actor }}</a>,
+                {% if scene.actor_set.all %}
+                    {% for actor in scene.actor_set.all %}
+                        <a href="/actors/{{ actor.id }}">{{ actor.person.getFullName }}</a>,
                     {% endfor %}
                 {% else %}
                     -

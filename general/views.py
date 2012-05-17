@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from movies.models import Movie, Scene
+from movies.models import Scene
 from django.template import RequestContext, loader
 from django.db.models import Q
 from django.contrib.auth.decorators import permission_required, login_required
@@ -9,26 +9,53 @@ from genres.models import Genre
 @permission_required('movies.watch', login_url="/")
 def simpleSearch(request):
     searchTerm = request.POST['searchTerm']
-    print searchTerm
-    searchedMovies = Movie.objects.filter(Q(title__contains=searchTerm) | Q(description__contains=searchTerm))
-    #TODO search also in genres scenes.title and actors and accumulate the movies
-    template = loader.get_template('movie/movieList.html')
+
+    if searchTerm:
+        error = None
+        #TODO search also in genres and actors and accumulate the movies
+        scenes = Scene.objects.filter(Q(title__icontains=searchTerm) | Q(description__icontains=searchTerm))
+    else:
+        error = "Search Term is empty."
+        scenes = None
+
+    template = loader.get_template('scene/sceneList.html')
     context = RequestContext(request, {
-        'movies': searchedMovies,
+        'scenes': scenes,
+        'error': error,
     })
     return HttpResponse(template.render(context))
 
 @permission_required('movies.watch', login_url="/")
 def extendedSearch(request):
-    title = request.POST['title']
-    actor = request.POST['actor']
-    genre = request.POST['genre']
-    print title, actor, genre
-    titleMovies = Movie.objects.filter(Q(title__contains=title))
-    #TODO search also in genres and actors and accumulate the movies
-    template = loader.get_template('movie/movieList.html')
+    searchFilter = None
+    template = loader.get_template('scene/sceneList.html')
+
+    title = request.POST.get('title', None)
+    if title:
+        searchFilter = Q(title__icontains=title)
+    actor = request.POST.get('actor', None)
+    if actor:
+        if searchFilter:
+            searchFilter = searchFilter & Q(actor__in=actor)
+        else:
+            searchFilter = Q(actor__in=actor)
+    genre = request.POST.get('genre', None)
+    if genre:
+        if searchFilter:
+            searchFilter = searchFilter & Q(genre__in=genre)
+        else:
+            searchFilter = Q(genre__in=genre)
+
+    if not searchFilter:
+        scenes = None
+        error = "Invalid search term."
+    else:
+        error = None
+        scenes = Scene.objects.filter(searchFilter).order_by('title')
+
     context = RequestContext(request, {
-        'movies': titleMovies,
+        'scenes': scenes,
+        'error': error,
     })
     return HttpResponse(template.render(context))
 

@@ -23,7 +23,7 @@
                 <td>
                     <select name="actor" class="scrollbox" size=11 multiple>
                         {% for actor in actors %}
-                            <option value="{{ actor.person.id }}">{{ actor.person.firstName }} {{ actor.person.lastName }}</option>
+                            <option value="{{ actor.id }}">{{ actor.person.firstName }} {{ actor.person.lastName }}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -31,7 +31,7 @@
                 <td>
                     <select name="genre" class="scrollbox" size=11 multiple>
                         {% for genre in genres %}
-                            <option value="{{ genre.shortDescription }}">{{ genre.shortDescription }}</option>
+                            <option value="{{ genre.id }}">{{ genre.shortDescription }}</option>
                         {% endfor %}
                     </select>
                 </td>
